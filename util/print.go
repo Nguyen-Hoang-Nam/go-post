@@ -7,7 +7,7 @@ import (
 	"net/http"
 )
 
-func Print(res *http.Response) {
+func Print(res *http.Response) error {
 	result := fmt.Sprintf("%s %s\n", res.Proto, res.Status)
 
 	for resHeaderKey, resHeaderValue := range res.Header {
@@ -18,8 +18,7 @@ func Print(res *http.Response) {
 
 	resBody, err := ioutil.ReadAll(res.Body)
 	if err != nil {
-		fmt.Printf("Can not read response: %v", err)
-		return
+		return fmt.Errorf("Can not read response: %v\n", err)
 	}
 
 	var obj map[string]interface{}
@@ -29,12 +28,12 @@ func Print(res *http.Response) {
 	} else {
 		resBodyBeaty, err := json.MarshalIndent(obj, "", "    ")
 		if err != nil {
-			fmt.Printf("Response is not json: %v", err)
-			return
+			return fmt.Errorf("Response is not json: %v\n", err)
 		}
 
 		result += string(resBodyBeaty)
 	}
 
 	fmt.Printf("%s\n", result)
+	return nil
 }

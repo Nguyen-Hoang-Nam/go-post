@@ -25,5 +25,6 @@ func Execute() {
 func init() {
 	rootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 	rootCmd.PersistentFlags().StringSlice("header", nil, "A list of headers")
+	rootCmd.PersistentFlags().Bool("sort-header", false, "Sort header by alphabet")
 	rootCmd.PersistentFlags().StringSlice("param", nil, "A list of params")
 }

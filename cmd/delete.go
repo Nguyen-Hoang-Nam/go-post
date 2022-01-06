@@ -2,8 +2,6 @@ package cmd
 
 import (
 	"fmt"
-	"net/http"
-	"strings"
 
 	"github.com/Nguyen-Hoang-Nam/go-post/util"
 	"github.com/spf13/cobra"
@@ -14,8 +12,6 @@ var deleteCmd = &cobra.Command{
 	Short: "Test delete method",
 	Long:  `Send DELETE request to server with headers, params`,
 	Run: func(cmd *cobra.Command, args []string) {
-		client := http.Client{}
-
 		url := ""
 		if len(args) > 0 && args[0] != "" {
 			url = args[0]
@@ -24,35 +20,11 @@ var deleteCmd = &cobra.Command{
 			return
 		}
 
-		req, err := http.NewRequest("DELETE", url, nil)
+		err := util.Request(cmd, "DELETE", url)
 		if err != nil {
-			fmt.Printf("Url not valid: %v", err)
+			fmt.Printf("%v\n", err)
 			return
 		}
-
-		headers, err := cmd.Flags().GetStringSlice("header")
-		if err != nil {
-			fmt.Printf("Header not found: %v", err)
-			return
-		}
-
-		if len(headers) > 0 {
-			for _, header := range headers {
-				keyValue := strings.Split(header, ":")
-				key := strings.Trim(keyValue[0], " ")
-				value := strings.Trim(keyValue[1], " ")
-
-				req.Header.Set(key, value)
-			}
-		}
-
-		res, err := client.Do(req)
-		if err != nil {
-			fmt.Printf("Can not send request: %v", err)
-			return
-		}
-
-		util.Print(res)
 	},
 }
 
