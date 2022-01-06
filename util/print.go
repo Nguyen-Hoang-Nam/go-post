@@ -5,13 +5,28 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	"sort"
 )
 
-func Print(res *http.Response) error {
+func Print(res *http.Response, isSortHeader bool) error {
 	result := fmt.Sprintf("%s %s\n", res.Proto, res.Status)
 
-	for resHeaderKey, resHeaderValue := range res.Header {
-		result += fmt.Sprintf("%s: %s\n", resHeaderKey, resHeaderValue[0])
+	resHeaders := res.Header
+	if isSortHeader {
+		resHeaderKeys := make([]string, 0, len(resHeaders))
+		for resHeaderKey := range resHeaders {
+			resHeaderKeys = append(resHeaderKeys, resHeaderKey)
+		}
+
+		sort.Strings(resHeaderKeys)
+
+		for _, resHeaderKey := range resHeaderKeys {
+			result += fmt.Sprintf("%s: %s\n", resHeaderKey, resHeaders[resHeaderKey][0])
+		}
+	} else {
+		for resHeaderKey, resHeaderValue := range resHeaders {
+			result += fmt.Sprintf("%s: %s\n", resHeaderKey, resHeaderValue[0])
+		}
 	}
 
 	result += "\n"

@@ -20,7 +20,7 @@ var putCmd = &cobra.Command{
 			return
 		}
 
-		err := util.Request(cmd, "DELETE", url)
+		err := util.Request(cmd, "PUT", url)
 		if err != nil {
 			fmt.Printf("%v\n", err)
 			return

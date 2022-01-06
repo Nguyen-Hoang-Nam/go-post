@@ -36,7 +36,13 @@ func Request(cmd *cobra.Command, method string, url string) error {
 		return fmt.Errorf("Can not send request: %v\n", err)
 	}
 
-	err = Print(res)
+	isSortHeader, err := cmd.Flags().GetBool("sort-header")
+	if err != nil || !isSortHeader {
+		err = Print(res, false)
+	} else {
+		err = Print(res, true)
+	}
+
 	if err != nil {
 		return fmt.Errorf("%v\n", err)
 	}
