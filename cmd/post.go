@@ -2,10 +2,10 @@ package cmd
 
 import (
 	"fmt"
-	"io/ioutil"
 	"net/http"
 	"strings"
 
+	"github.com/Nguyen-Hoang-Nam/go-post/util"
 	"github.com/spf13/cobra"
 )
 
@@ -52,14 +52,7 @@ var postCmd = &cobra.Command{
 			return
 		}
 
-		body, err := ioutil.ReadAll(res.Body)
-		if err != nil {
-			fmt.Printf("Can not read response: %v", err)
-			return
-		}
-
-		result := string(body)
-		fmt.Printf(result)
+		util.Print(res)
 	},
 }
 
